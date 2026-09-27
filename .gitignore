@@ -1,0 +1,7 @@
+# Godot import cache & builds
+.godot/
+/builds/
+/export/
+*.tmp
+# tools scratch
+tools/__pycache__/
