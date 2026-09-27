@@ -33,10 +33,22 @@ export_one() {
 
 install_templates
 
+export_apk() {
+  # Try a release-signed APK; if no release keystore is configured, fall back to
+  # a debug-signed APK (installs on any device). Needs a valid Android SDK with
+  # apksigner + zipalign, plus the debug keystore set in Godot's Editor Settings.
+  mkdir -p builds/android
+  echo "[export] Android -> builds/android/AbidjanRunner.apk"
+  if ! "$GODOT" --headless --path "$HERE" --export-release "Android" "builds/android/AbidjanRunner.apk" 2>/dev/null; then
+    echo "[export] release keystore missing -> building debug-signed APK"
+    "$GODOT" --headless --path "$HERE" --export-debug "Android" "builds/android/AbidjanRunner.apk"
+  fi
+}
+
 case "${1:-all}" in
   windows) export_one "Windows Desktop" "builds/windows/AbidjanRunner.exe" ;;
   linux)   export_one "Linux"           "builds/linux/AbidjanRunner.x86_64" ;;
-  android) export_one "Android"         "builds/android/AbidjanRunner.apk" ;;
+  android) export_apk ;;
   all)
     export_one "Windows Desktop" "builds/windows/AbidjanRunner.exe"
     export_one "Linux"           "builds/linux/AbidjanRunner.x86_64"

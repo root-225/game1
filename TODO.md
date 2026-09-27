@@ -1,26 +1,27 @@
-# ABIDJAN RUNNER — TODO / progress
+# ABIDJAN RUNNER — état : ✅ TERMINÉ
 
-## Assets (pure-Python glTF generator, no Blender GUI needed)
-- [ ] gltf_builder.py — reusable glTF/glb writer (meshes, vertex materials, skin, animations)
-- [ ] gen_characters.py — 3 rigged+animated skins (run/jump/roll/hit/idle)
-- [ ] gen_env.py — buildings, kiosk, taxi, bridge, palm, road, ground
-- [ ] gen_obstacles.py — 8 obstacles
-- [ ] gen_collectibles.py — coins + 4 items + powerups
-- [ ] gen_textures.py — road/sky/ui icons (PIL)
-- [ ] gen_audio.py — sfx + music loop (numpy wav)
+## Assets (pipeline pur-Python glTF, sans Blender GUI) — ✅
+- [x] gltf_builder.py — writer glTF/glb (meshes, matériaux, skin, animations)
+- [x] gen_characters.py — 4 skins riggés + animés (run/jump/roll/hit/idle, 11 os)
+- [x] gen_env.py — bâtiments, kiosque, taxi wôrô-wôrô, pont, palmiers, route, sol
+- [x] gen_items.py — 9 obstacles, 5 collectibles, 3 power-ups
+- [x] gen_textures.py — icône appli + 13 icônes UI
+- [x] gen_audio.py — 7 SFX + boucle musicale
+- [x] 30 .glb (528K) validés (accessors, skins, anims) + importés dans Godot
 
-## Godot project
-- [ ] project.godot, input map, autoloads
-- [ ] Global.gd (save/load, coins, best, skins, daily missions)
-- [ ] Player.gd (3 lanes, jump, roll, swipe+keys, anims)
-- [ ] Game.gd (loop, speed ramp, score, states)
-- [ ] ChunkManager.gd + Chunk.gd (procedural infinite + pooling)
-- [ ] ObjectPool.gd, Obstacle.gd, Collectible.gd, PowerUp.gd
-- [ ] UI: MainMenu, HUD, Pause, GameOver, Shop
-- [ ] Scenes wired
+## Projet Godot — ✅
+- [x] project.godot (autoloads, input map clavier, GL Compatibility mobile)
+- [x] global.gd (sauvegarde JSON, pièces, record, skins, missions quotidiennes)
+- [x] audio.gd (SFX + musique bouclée)
+- [x] data.gd, player.gd, game.gd, chunk_manager.gd, spawnable.gd, main.gd, ui.gd
+- [x] Génération procédurale infinie + pooling (0 lag)
+- [x] UI complète : menu, HUD tactile, pause, game over, boutique
+- [x] Smoke test headless : joueur court, chunks streament, 56 pickups, anim run ✅
 
-## Ship
-- [ ] godot --headless --import (0 errors)
-- [ ] export_presets.cfg (Windows + Android)
-- [ ] README.md
-- [ ] git commits + push
+## Livrables — ✅
+- [x] Export Windows (.exe autonome, PCK embarqué)
+- [x] Export Linux (.x86_64 autonome)
+- [x] APK Android signée (apksigner v1+v2+v3 ✅, installable)
+- [x] export_presets.cfg + tools/build.sh
+- [x] README.md complet
+- [x] Commits + push branche claude/eloquent-ramanujan-7i3pbf

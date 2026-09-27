@@ -135,6 +135,31 @@ godot --headless --path . --export-release "Android"        builds/android/Abidj
 > `~/.config/godot/editor_settings-4.4.tres` (clés `export/android/android_sdk_path` et
 > `export/android/debug_keystore`).
 
+#### Astuce : sans le SDK Google (Debian/Ubuntu)
+
+Si `dl.google.com` est bloqué, les seuls outils requis pour signer une APK
+(`apksigner`, `zipalign`, `adb`) s'installent via apt, puis on fabrique une
+arborescence SDK minimale :
+
+```bash
+sudo apt-get install -y apksigner zipalign adb openjdk-17-jdk
+SDK=$HOME/android-sdk
+mkdir -p "$SDK/platform-tools" "$SDK/build-tools/34.0.0"
+ln -sf "$(which adb)"       "$SDK/platform-tools/adb"
+ln -sf "$(which apksigner)" "$SDK/build-tools/34.0.0/apksigner"
+ln -sf "$(which zipalign)"  "$SDK/build-tools/34.0.0/zipalign"
+keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android \
+  -keystore "$HOME/debug.keystore" -storepass android \
+  -dname "CN=Android Debug,O=Android,C=US" -validity 9999
+# Dans ~/.config/godot/editor_settings-4.4.tres :
+#   export/android/android_sdk_path = "<...>/android-sdk"
+#   export/android/debug_keystore   = "<...>/debug.keystore"
+godot --headless --path . --export-debug "Android" builds/android/AbidjanRunner.apk
+```
+
+> C'est exactement la méthode utilisée pour produire l'APK signé
+> (`apksigner verify` → schémas v1 + v2 + v3 ✅).
+
 ---
 
 ## ⚙️ Détails techniques
