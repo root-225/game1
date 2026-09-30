@@ -16,12 +16,11 @@ func _ready() -> void:
 	cam.current = true
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://assets/ui/skins"))
 	for skin in Data.SKINS.keys():
-		var m: Node3D = Data.scene(Data.KK_CHARS + Data.SKINS[skin]["base"] + ".glb").instantiate()
-		Data.retexture(m, Data.skin_texture(skin))
+		var m: Node3D = Data.scene(Data.SKINS[skin]["model"]).instantiate()
 		m.scale = Vector3.ONE * Data.CHAR_SCALE
 		add_child(m)
 		var ap: AnimationPlayer = m.find_child("AnimationPlayer", true, false)
-		ap.play("Idle"); ap.seek(0.3, true)
+		ap.play("idle"); ap.seek(0.3, true)
 		for i in 8: await get_tree().process_frame
 		get_viewport().get_texture().get_image().save_png("res://assets/ui/skins/%s.png" % skin)
 		print("portrait ", skin)

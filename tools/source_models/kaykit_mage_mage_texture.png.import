@@ -2,19 +2,19 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5gd7eipajqet"
-path="res://.godot/imported/barbarian_barbarian_texture.png-3b0f0e52cb84acc1d7eb9459791e7ec6.ctex"
+uid="uid://cmx3utpt178y4"
+path="res://.godot/imported/kaykit_mage_mage_texture.png-4a2074fb564d9fdc4f794bb83a6f7621.ctex"
 metadata={
 "vram_texture": false
 }
 generator_parameters={
-"md5": "267533c91145eeae53d251a78b53814c"
+"md5": "4929e1d8419d602df7a7be89ce778863"
 }
 
 [deps]
 
-source_file="res://assets/thirdparty/kaykit/characters/barbarian_barbarian_texture.png"
-dest_files=["res://.godot/imported/barbarian_barbarian_texture.png-3b0f0e52cb84acc1d7eb9459791e7ec6.ctex"]
+source_file="res://tools/source_models/kaykit_mage_mage_texture.png"
+dest_files=["res://.godot/imported/kaykit_mage_mage_texture.png-4a2074fb564d9fdc4f794bb83a6f7621.ctex"]
 
 [params]
 

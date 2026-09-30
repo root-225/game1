@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dcmkl2d71k4xq"
-path="res://.godot/imported/barbarian.glb-7462f99180d0808f4b7bfc58433966b6.scn"
+uid="uid://br7vqiodt1wa4"
+path="res://.godot/imported/runner_trad.glb-569cbb8b57b54f9f0b9fe688aa7c796b.scn"
 
 [deps]
 
-source_file="res://assets/thirdparty/kaykit/characters/barbarian.glb"
-dest_files=["res://.godot/imported/barbarian.glb-7462f99180d0808f4b7bfc58433966b6.scn"]
+source_file="res://assets/thirdparty/gdquest/runner_trad.glb"
+dest_files=["res://.godot/imported/runner_trad.glb-569cbb8b57b54f9f0b9fe688aa7c796b.scn"]
 
 [params]
 

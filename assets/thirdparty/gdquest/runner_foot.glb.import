@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cqcnd7dyxfr5d"
-path="res://.godot/imported/mage.glb-23c760ee0f6a60a132d09e4af4d4b63a.scn"
+uid="uid://bwlhaats5shvj"
+path="res://.godot/imported/runner_foot.glb-e86ed9c0defea9ea8eda0a1f25324fa8.scn"
 
 [deps]
 
-source_file="res://assets/thirdparty/kaykit/characters/mage.glb"
-dest_files=["res://.godot/imported/mage.glb-23c760ee0f6a60a132d09e4af4d4b63a.scn"]
+source_file="res://assets/thirdparty/gdquest/runner_foot.glb"
+dest_files=["res://.godot/imported/runner_foot.glb-e86ed9c0defea9ea8eda0a1f25324fa8.scn"]
 
 [params]
 

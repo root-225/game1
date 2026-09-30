@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c0n8r232vhoxh"
-path="res://.godot/imported/knight.glb-e0e5ff2e1ac9b65ea91b697a6e64e774.scn"
+uid="uid://o60jyopsq5ke"
+path="res://.godot/imported/kaykit_mage.glb-1637910a219538ce8884c16103d2f47d.scn"
 
 [deps]
 
-source_file="res://assets/thirdparty/kaykit/characters/knight.glb"
-dest_files=["res://.godot/imported/knight.glb-e0e5ff2e1ac9b65ea91b697a6e64e774.scn"]
+source_file="res://tools/source_models/kaykit_mage.glb"
+dest_files=["res://.godot/imported/kaykit_mage.glb-1637910a219538ce8884c16103d2f47d.scn"]
 
 [params]
 

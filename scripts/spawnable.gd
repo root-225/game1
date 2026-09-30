@@ -31,7 +31,10 @@ func configure(def: Dictionary, coldef: Array, cat: String, sub: String, spin: b
 	if def.has("tex"):
 		Data.retexture(_vis, Data.scene_tex(def["tex"]))
 	add_child(_vis)
-	if cat != "obstacle":   # small pickups: no shadow pass (saves draw calls on mobile)
+	if cat == "obstacle":
+		Mats.add_outline(_vis, 0.035, s)
+		add_child(Mats.blob(Vector2(coldef[3], coldef[5]) * 1.35 + Vector2(0.4, 0.4), 0.5))
+	else:   # small pickups: no shadow pass (saves draw calls on mobile)
 		for gi in _vis.find_children("*", "GeometryInstance3D", true, false):
 			(gi as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var shape := CollisionShape3D.new()

@@ -6,9 +6,10 @@ CFA, de l'alloco, du coco et de l'akpakpa. Vitesse progressive, score, meilleur 
 sauvegardé, missions quotidiennes et 4 skins à débloquer.
 
 Moteur : **Godot 4.4** (GDScript, renderer GL Compatibility, optimisé mobile 60 FPS).
-Les visuels combinent des **packs d'assets libres (CC0)** — personnages riggés et rue de
-KayKit, pièces/nuages/sons de Kenney, police Lilita One — et des assets **générés par
-script** pour tout ce qui est propre à Abidjan (voir [CREDITS.md](CREDITS.md)).
+Les visuels combinent des **assets libres** — coureurs humanoïdes basés sur Mannequiny
+(GDQuest, CC-BY 4.0) animés avec des clips KayKit retargetés, rue KayKit, pièces/nuages/sons
+Kenney (CC0), police Lilita One — et des assets **générés par script** pour tout ce qui est
+propre à Abidjan (voir [CREDITS.md](CREDITS.md)).
 
 ![captures](docs/screenshots.jpg)
 
@@ -115,7 +116,8 @@ python3 gen_items.py        # obstacles, collectibles, power-ups
 python3 gen_surfaces.py     # textures asphalte / pavés / latérite + sprites de particules
 python3 gen_textures.py     # icône appli + icônes UI
 python3 gen_audio.py        # SFX + musique
-python3 recolor_chars.py    # skins ivoiriens à partir des atlas KayKit (kaykit_textures/)
+./build_runners.sh          # coureurs : retarget des animations KayKit + glissade + habillage
+python3 recolor_atlas.py    # taxi orange / wôrô-wôrô vert (atlas KayKit City)
 python3 prune_gltf.py IN.glb OUT.glb --keep Idle,Running_A --drop Cape  # allège un .glb
 ```
 
@@ -204,8 +206,13 @@ godot --headless --path . --export-debug "Android" builds/android/AbidjanRunner.
   repositionné devant, re-décoré et repeuplé. Obstacles, objets **et décor** sont
   **poolés** ; les pools sont pré-remplis à la demande maximale mesurée (test de 2 min :
   nombre de nœuds stable, 0 nœud orphelin).
-- **~270 draw calls** par image en course (ombres limitées aux objets proches, modèles
-  générés à surface unique, matériaux partagés).
+- **~350 draw calls** par image en course (ombres limitées aux objets proches, modèles
+  générés à surface unique, matériaux partagés ; contours toon sur obstacles et coureur).
+- **Rendu** : tonemapping Filmic + contraste/saturation, lumière ambiante en partie neutre
+  (pas de dominante bleue), MSAA 4x, filtrage anisotrope, ombres 2 cascades (4096 px,
+  2048 sur mobile), contours « inverted hull » et ombres de contact sous les obstacles.
+- **Coureurs** : squelette humain de 45 os ; animations KayKit retargetées (rotation par os
+  en espace monde relative à la T-pose commune) + glissade créée à la main.
 - **Difficulté** progressive (nombre de voies bloquées / rangées) — au moins une voie
   toujours franchissable.
 - **Brouillard de profondeur** (55 → 125 m) : masque l'apparition des chunks lointains

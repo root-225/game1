@@ -29,9 +29,9 @@ var _power_acc := 0.0
 # menu/shop framing: camera distance, camera height, look-at height (lower = runner higher on screen)
 var _menu_view := Vector3(5.4, 1.0, 0.1)
 
-const SKY_TOP := Color(0.24, 0.52, 0.86)
-const HORIZON := Color(0.78, 0.86, 0.90)
-const CAM_RUN_OFFSET := Vector3(0, 4.0, 6.6)
+const SKY_TOP := Color(0.12, 0.36, 0.78)
+const HORIZON := Color(0.56, 0.72, 0.88)
+const CAM_RUN_OFFSET := Vector3(0, 4.5, 7.3)
 const CLOUD_SPAN := 220.0
 
 func _ready() -> void:
@@ -45,7 +45,7 @@ func _ready() -> void:
 	player.hit_obstacle.connect(_on_hit)
 	player.picked.connect(_on_pick)
 	camera = Camera3D.new()
-	camera.fov = 66.0
+	camera.fov = 60.0
 	camera.far = 260.0
 	camera.current = true
 	add_child(camera)
@@ -56,43 +56,49 @@ func _build_environment() -> void:
 	var sky_mat := ProceduralSkyMaterial.new()
 	sky_mat.sky_top_color = SKY_TOP
 	sky_mat.sky_horizon_color = HORIZON
-	sky_mat.sky_curve = 0.12
+	sky_mat.sky_curve = 0.09
 	sky_mat.ground_horizon_color = HORIZON
-	sky_mat.ground_bottom_color = Color(0.45, 0.55, 0.52)
-	sky_mat.sun_angle_max = 20.0
+	sky_mat.ground_bottom_color = Color(0.30, 0.38, 0.42)
+	sky_mat.sun_angle_max = 18.0
 	var sky := Sky.new()
 	sky.sky_material = sky_mat
 	env.background_mode = Environment.BG_SKY
 	env.sky = sky
+	# less ambient + stronger sun = real shadows/contrast instead of a flat, washed-out image
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
-	env.ambient_light_energy = 0.55
+	env.ambient_light_color = Color(0.95, 0.88, 0.80)
+	env.ambient_light_sky_contribution = 0.55     # rest is warm neutral: no blue cast on asphalt
+	env.ambient_light_energy = 0.5
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.tonemap_exposure = 1.0
-	# depth fog only fades the far end of the stream (hides chunk pop-in), foreground stays crisp
+	env.tonemap_white = 5.0
+	env.adjustment_enabled = true
+	env.adjustment_contrast = 1.08
+	env.adjustment_saturation = 1.15
+	env.adjustment_brightness = 1.0
+	# depth fog only fades the far end of the stream (hides chunk pop-in), tinted sky blue
 	env.fog_enabled = true
 	env.fog_mode = Environment.FOG_MODE_DEPTH
 	env.fog_light_color = HORIZON
 	env.fog_density = 1.0
-	env.fog_depth_begin = 55.0
-	env.fog_depth_end = 125.0
-	env.fog_depth_curve = 1.4
+	env.fog_depth_begin = 70.0
+	env.fog_depth_end = 140.0
+	env.fog_depth_curve = 1.6
 	env.fog_sky_affect = 0.0
-	env.glow_enabled = true
-	env.glow_intensity = 0.35
-	env.glow_bloom = 0.02
-	env.glow_hdr_threshold = 1.1
+	env.glow_enabled = false
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
 
 	_sun = DirectionalLight3D.new()
-	_sun.rotation = Vector3(deg_to_rad(-48), deg_to_rad(-38), 0)
-	_sun.light_energy = 1.25
-	_sun.light_color = Color(1.0, 0.94, 0.84)
+	_sun.rotation = Vector3(deg_to_rad(-52), deg_to_rad(-35), 0)
+	_sun.light_energy = 1.45
+	_sun.light_color = Color(1.0, 0.93, 0.80)
 	_sun.shadow_enabled = true
-	_sun.shadow_blur = 1.5
-	_sun.directional_shadow_max_distance = 45.0
-	_sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
+	_sun.shadow_blur = 1.2
+	_sun.shadow_opacity = 0.85
+	_sun.directional_shadow_max_distance = 55.0
+	_sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	add_child(_sun)
 
 func _build_clouds() -> void:
@@ -179,7 +185,7 @@ func _update_camera(delta: float) -> void:
 	var p := player.position
 	var target := Vector3(p.x * 0.45, CAM_RUN_OFFSET.y + p.y * 0.25, p.z + CAM_RUN_OFFSET.z)
 	camera.position = camera.position.lerp(target, clamp(delta * 5.0, 0, 1))
-	var look := Vector3(p.x * 0.5, 1.2 + p.y * 0.3, p.z - 7.0)
+	var look := Vector3(p.x * 0.5, 0.9 + p.y * 0.3, p.z - 9.0)
 	camera.transform = camera.transform.looking_at(look, Vector3.UP)
 	_sun.position = p
 

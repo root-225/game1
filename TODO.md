@@ -38,3 +38,10 @@
 - [x] Bugs corrigés : HUD power-ups figé, monitorable modifié pendant un signal
 - [x] Perf : 606 → ~270 draw calls, pools pré-remplis, test de 2 min sans fuite
 - [x] CREDITS.md + captures dans docs/
+
+## v3 — Retours joueur — ✅
+- [x] Image trop claire : Filmic + contraste/saturation, ambiante réduite et moins bleue, ciel plus profond, brouillard plus loin, pas de glow
+- [x] Obstacles plus visibles : contours toon, ombres de contact, +10 à 30 % de taille
+- [x] Coureur trop gros : humanoïde 1,66 m (Mannequiny CC-BY) au lieu du chibi, caméra plus haute/reculée
+- [x] Nouvelle glissade (slide) créée à la main, animations KayKit retargetées
+- [x] Qualité : MSAA 4x, anisotrope, ombres 2 cascades haute résolution

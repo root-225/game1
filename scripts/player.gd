@@ -68,14 +68,14 @@ func _sprite_mat(tex_path: String) -> StandardMaterial3D:
 func _particles(tex: String, amount: int, life: float) -> CPUParticles3D:
 	var p := CPUParticles3D.new()
 	var q := QuadMesh.new()
-	q.size = Vector2(0.38, 0.38)
+	q.size = Vector2(0.3, 0.3)
 	q.material = _sprite_mat(tex)
 	p.mesh = q
 	p.amount = amount
 	p.lifetime = life
 	p.local_coords = false
 	var fade := Gradient.new()
-	fade.set_color(0, Color(1, 1, 1, 0.6))
+	fade.set_color(0, Color(0.85, 0.8, 0.72, 0.45))
 	fade.set_color(1, Color(1, 1, 1, 0.0))
 	p.color_ramp = fade
 	var sc := Curve.new()
@@ -148,11 +148,10 @@ func set_skin(skin: String) -> void:
 	if _model:
 		_model.queue_free()
 		_model = null
-	var base: String = Data.SKINS[skin]["base"]
-	_model = Data.scene(Data.KK_CHARS + base + ".glb").instantiate()
-	Data.retexture(_model, Data.skin_texture(skin))
+	_model = Data.scene(Data.SKINS[skin]["model"]).instantiate()
 	_model.scale = Vector3.ONE * Data.CHAR_SCALE
 	_model.rotation.y = _facing
+	Mats.add_outline(_model, 0.012, Data.CHAR_SCALE)
 	add_child(_model)
 	_anim = _model.find_child("AnimationPlayer", true, false)
 	if _anim:
