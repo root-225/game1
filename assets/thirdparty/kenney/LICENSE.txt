@@ -1,0 +1,3 @@
+Kenney Starter Kits (3D Platformer; City Builder for the ambience sound) - https://github.com/KenneyNL
+Models, sprites and sounds: CC0 1.0 (public domain). Code in those kits: MIT.
+https://creativecommons.org/publicdomain/zero/1.0/

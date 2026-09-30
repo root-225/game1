@@ -25,6 +25,11 @@ window/handheld/orientation=1
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[gui]
+
+theme/custom_font="res://assets/fonts/LilitaOne-Regular.ttf"
+theme/default_font_antialiasing=1
+
 [input]
 
 move_left={

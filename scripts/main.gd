@@ -24,7 +24,10 @@ func _ready() -> void:
 	ui.resume_pressed.connect(_resume)
 	ui.pause_pressed.connect(_pause)
 	ui.menu_pressed.connect(_to_menu)
-	ui.skin_chosen.connect(_on_skin)
+	ui.skin_chosen.connect(func(skin): game.preview_skin(skin))
+	ui.skin_preview.connect(func(skin): game.preview_skin(skin))
+	ui.shop_closed.connect(func(): game.show_menu_player())
+	ui.screen_changed.connect(_on_screen)
 
 	game.show_menu_player()
 	ui.show_menu()
@@ -51,12 +54,13 @@ func _to_menu() -> void:
 	game.show_menu_player()
 	ui.show_menu()
 
+func _on_screen(name: String) -> void:
+	match name:
+		"menu": game.set_menu_view(5.4, 1.0, 0.1)
+		"shop": game.set_menu_view(6.6, 1.1, -0.75)
+
 func _on_game_over(score: int, coins: int, best: int, is_best: bool) -> void:
 	ui.show_over(score, coins, best, is_best)
-
-func _on_skin(skin: String) -> void:
-	game.player.set_skin(skin)
-	game.show_menu_player()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):

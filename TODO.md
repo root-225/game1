@@ -25,3 +25,16 @@
 - [x] export_presets.cfg + tools/build.sh
 - [x] README.md complet
 - [x] Commits + push branche claude/eloquent-ramanujan-7i3pbf
+
+## v2 — Assets téléchargés & embellissement — ✅
+- [x] Personnages KayKit (CC0) riggés, 12 animations, recolorés en 4 tenues ivoiriennes
+- [x] Rue KayKit (CC0) : immeubles, taxi orange, wôrô-wôrô vert, benne, lampadaires, mobilier
+- [x] Kenney (CC0) : pièce, nuages, sons ; police Lilita One (OFL)
+- [x] Route texturée (asphalte, pavés), bordures rouge/blanc, palmiers, tours du Plateau
+- [x] Biome lagune : pont, garde-corps, eau animée (shader), skyline du Plateau
+- [x] Particules (poussière, atterrissage, étincelles), bulle de bouclier, halos power-ups
+- [x] Éclairage/brouillard corrigés (scène n'est plus délavée), couleurs glTF en linéaire
+- [x] UI refaite (menu transparent sur la scène 3D, boutique avec aperçu 3D + portraits)
+- [x] Bugs corrigés : HUD power-ups figé, monitorable modifié pendant un signal
+- [x] Perf : 606 → ~270 draw calls, pools pré-remplis, test de 2 min sans fuite
+- [x] CREDITS.md + captures dans docs/

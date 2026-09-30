@@ -28,6 +28,11 @@ def quat_euler(rx, ry, rz):
 
 IDENT_QUAT = (0.0, 0.0, 0.0, 1.0)
 
+
+def srgb_to_linear(c):
+    """glTF colour factors are linear; our palettes are authored in sRGB."""
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+
 # ---------------------------------------------------------------- geometry
 def box(cx, cy, cz, sx, sy, sz):
     """Flat-shaded box centered at (cx,cy,cz) with full sizes sx,sy,sz.
@@ -110,6 +115,26 @@ def scale_mesh(mesh, s):
     return ([(x*s, y*s, z*s) for (x, y, z) in pos], nrm, idx)
 
 
+def rotate_mesh(mesh, rx=0.0, ry=0.0, rz=0.0, pivot=(0.0, 0.0, 0.0)):
+    """Rotate positions/normals by Euler XYZ (radians) around pivot."""
+    cx, sx = math.cos(rx), math.sin(rx)
+    cy, sy = math.cos(ry), math.sin(ry)
+    cz, sz = math.cos(rz), math.sin(rz)
+    def rot(v):
+        x, y, z = v
+        y, z = y*cx - z*sx, y*sx + z*cx
+        x, z = x*cy + z*sy, -x*sy + z*cy
+        x, y = x*cz - y*sz, x*sz + y*cz
+        return (x, y, z)
+    px, py, pz = pivot
+    pos, nrm, idx = mesh
+    P = []
+    for (x, y, z) in pos:
+        rx_, ry_, rz_ = rot((x-px, y-py, z-pz))
+        P.append((rx_+px, ry_+py, rz_+pz))
+    return P, [rot(n) for n in nrm], idx
+
+
 def merge(*meshes):
     P, N, I = [], [], []
     for pos, nrm, idx in meshes:
@@ -174,15 +199,18 @@ class GLTF:
         self.accessors.append({"bufferView": view, "componentType": 5121, "count": len(joints), "type": "VEC4"})
         return len(self.accessors) - 1
 
-    def material(self, rgba, metallic=0.0, rough=0.85, emissive=None, unlit=False):
-        key = (tuple(rgba), metallic, rough, tuple(emissive) if emissive else None, unlit)
+    def material(self, rgba, metallic=0.0, rough=0.85, emissive=None, unlit=False, name=None):
+        key = (tuple(rgba), metallic, rough, tuple(emissive) if emissive else None, unlit, name)
         if key in self._matcache:
             return self._matcache[key]
-        m = {"pbrMetallicRoughness": {"baseColorFactor": list(rgba),
+        lin = [srgb_to_linear(c) for c in rgba[:3]] + [rgba[3] if len(rgba) > 3 else 1.0]
+        m = {"pbrMetallicRoughness": {"baseColorFactor": lin,
              "metallicFactor": metallic, "roughnessFactor": rough},
              "doubleSided": False}
+        if name:
+            m["name"] = name
         if emissive:
-            m["emissiveFactor"] = list(emissive)
+            m["emissiveFactor"] = [srgb_to_linear(c) for c in emissive]
         if unlit:
             m["extensions"] = {"KHR_materials_unlit": {}}
         self.materials.append(m)
@@ -197,6 +225,8 @@ class GLTF:
             attrs = {}
             attrs["POSITION"] = self._acc_f(p["positions"], 3, minmax=True)
             attrs["NORMAL"] = self._acc_f(p["normals"], 3)
+            if "colors" in p:
+                attrs["COLOR_0"] = self._acc_f(p["colors"], 4)
             if "joints" in p:
                 attrs["JOINTS_0"] = self._acc_joints(p["joints"])
                 attrs["WEIGHTS_0"] = self._acc_f(p["weights"], 4)
@@ -270,25 +300,45 @@ class GLTF:
 
 # ---------------------------------------------------------------- static-mesh helper
 def save_static(path, colored_parts, name="asset"):
-    """colored_parts: list of (mesh, rgba, opts). Groups by color into primitives."""
+    """colored_parts: list of (mesh, rgba, opts).
+
+    Parts sharing the same surface properties are merged into ONE primitive whose colours are
+    stored per vertex (COLOR_0) -> one draw call per model instead of one per colour.
+    Emissive/unlit parts keep a flat-coloured material each (emission can't vary per vertex).
+    """
     g = GLTF()
     groups = {}
     order = []
     for item in colored_parts:
         mesh, rgba = item[0], item[1]
         opts = item[2] if len(item) > 2 else {}
-        mi = g.material(rgba, metallic=opts.get("metallic", 0.0),
-                        rough=opts.get("rough", 0.85), emissive=opts.get("emissive"),
-                        unlit=opts.get("unlit", False))
-        if mi not in groups:
-            groups[mi] = ([], [], []); order.append(mi)
-        P, N, I = groups[mi]
+        flat = bool(opts.get("emissive") or opts.get("unlit"))
+        if flat:
+            key = ("flat", tuple(rgba), opts.get("metallic", 0.0), opts.get("rough", 0.85),
+                   tuple(opts.get("emissive") or ()), opts.get("unlit", False), opts.get("name"))
+        else:
+            key = ("vc", opts.get("metallic", 0.0), opts.get("rough", 0.85), opts.get("name"))
+        if key not in groups:
+            if flat:
+                mi = g.material(rgba, metallic=key[2], rough=key[3], emissive=opts.get("emissive"),
+                                unlit=key[5], name=key[6])
+            else:
+                mi = g.material([1, 1, 1, 1], metallic=key[1], rough=key[2], name=key[3])
+            groups[key] = {"mi": mi, "flat": flat, "P": [], "N": [], "I": [], "C": []}
+            order.append(key)
+        grp = groups[key]
         p, n, i = mesh
-        off = len(P); P += p; N += n; I += [k+off for k in i]
+        off = len(grp["P"])
+        grp["P"] += p; grp["N"] += n; grp["I"] += [k + off for k in i]
+        lin = tuple(srgb_to_linear(c) for c in rgba[:3]) + (rgba[3] if len(rgba) > 3 else 1.0,)
+        grp["C"] += [lin] * len(p)
     prims = []
-    for mi in order:
-        P, N, I = groups[mi]
-        prims.append({"positions": P, "normals": N, "indices": I, "material": mi})
+    for key in order:
+        grp = groups[key]
+        prim = {"positions": grp["P"], "normals": grp["N"], "indices": grp["I"], "material": grp["mi"]}
+        if not grp["flat"]:
+            prim["colors"] = grp["C"]
+        prims.append(prim)
     mesh_i = g.add_mesh(prims, name)
     g.scene_roots.append(g.add_node(name=name, mesh=mesh_i))
     return g.save(path)

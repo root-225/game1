@@ -6,8 +6,11 @@ CFA, de l'alloco, du coco et de l'akpakpa. Vitesse progressive, score, meilleur 
 sauvegardé, missions quotidiennes et 4 skins à débloquer.
 
 Moteur : **Godot 4.4** (GDScript, renderer GL Compatibility, optimisé mobile 60 FPS).
-Tous les assets 3D/2D/audio sont **générés procéduralement** (aucune dépendance, aucun
-placeholder manquant).
+Les visuels combinent des **packs d'assets libres (CC0)** — personnages riggés et rue de
+KayKit, pièces/nuages/sons de Kenney, police Lilita One — et des assets **générés par
+script** pour tout ce qui est propre à Abidjan (voir [CREDITS.md](CREDITS.md)).
+
+![captures](docs/screenshots.jpg)
 
 ---
 
@@ -16,7 +19,8 @@ placeholder manquant).
 - **3 couloirs** (gauche / centre / droite)
 - **Sauter** par-dessus les obstacles bas (barrière, nid-de-poule, pneu, cône, fût)
 - **Rouler** sous les obstacles hauts (banderole / barre de toit)
-- **Changer de voie** pour éviter les blocs (taxi garé, charrette, kiosque)
+- **Changer de voie** pour éviter les blocs (taxi compteur orange, wôrô-wôrô vert,
+  benne à ordures, pousse-pousse de bananes plantain, stand de garba à parasol)
 - **Power-ups** : 🧲 aimant à objets · 🛡️ bouclier (encaisse un choc) · ✖️2 multiplicateur
 - **Collectibles** : pièces CFA (monnaie), coco, alloco, akpakpa, smartphone (bonus)
 - **Vitesse** qui augmente avec la distance
@@ -25,6 +29,11 @@ placeholder manquant).
 - **Missions quotidiennes** (pièces / distance / parties) avec récompenses
 - **Boutique** : 4 skins (Urbain, Traditionnel, Footballeur, Businessman)
 - **Menu / Pause / Game Over**, UI tactile mobile + support clavier
+- **Deux ambiances** : les rues colorées de la ville (palmiers, lampadaires, bordures
+  peintes rouge/blanc) et la **traversée du pont sur la lagune Ébrié**, avec les tours
+  du Plateau de l'autre côté de l'eau
+- **Effets** : poussière de course, bouffée à l'atterrissage, étincelles sur les pièces,
+  bulle de bouclier, halos lumineux sous les power-ups, nuages, eau animée (shader)
 
 ### Contrôles
 
@@ -36,6 +45,16 @@ placeholder manquant).
 | Pause         | Échap                  | Bouton pause               |
 
 ---
+
+## ⬇️ Télécharger
+
+Builds prêtes à l'emploi dans [`dist/`](dist/) :
+
+| Plateforme | Fichier | Remarque |
+|---|---|---|
+| Android | `AbidjanRunner.apk` | signée (debug), installation directe |
+| Windows | `AbidjanRunner-windows.zip` | dézipper, lancer `AbidjanRunner.exe` |
+| Linux | `AbidjanRunner-linux.zip` | dézipper, `./AbidjanRunner.x86_64` |
 
 ## ▶️ Lancer le jeu
 
@@ -67,14 +86,19 @@ game1/
 │   ├── main.gd             # orchestrateur (états, routing signaux)
 │   ├── game.gd             # monde 3D, caméra, score, power-ups
 │   ├── player.gd           # CharacterBody3D: voies, saut, roulade, hitbox
-│   ├── chunk_manager.gd    # génération procédurale + pooling
+│   ├── chunk_manager.gd    # génération procédurale, biomes ville/lagune, pooling
 │   ├── spawnable.gd        # obstacle / collectible / power-up poolé
+│   ├── mats.gd             # matériaux partagés (asphalte, pavés, latérite, eau)
 │   └── ui.gd               # menus, HUD, pause, game over, boutique
 ├── assets/
-│   ├── models/             # 30 .glb low-poly (perso riggés + anims, décor, objets)
-│   ├── ui/                 # icônes PNG
-│   └── audio/              # SFX + boucle musicale (.wav)
-└── tools/                  # générateurs Python des assets (voir ci-dessous)
+│   ├── thirdparty/         # packs CC0 téléchargés (KayKit, Kenney) + licences
+│   ├── models/             # .glb générés (route, tours, palmiers, obstacles, objets)
+│   ├── textures/           # asphalte, pavés, latérite, sprites de particules
+│   ├── shaders/            # eau de la lagune
+│   ├── fonts/              # Lilita One (OFL)
+│   ├── ui/                 # icônes + portraits des skins
+│   └── audio/              # SFX (Kenney + générés), musique, ambiance
+└── tools/                  # générateurs Python + outils de capture/test (non exportés)
 ```
 
 ---
@@ -86,16 +110,26 @@ Les assets sont déjà commités. Pour les régénérer :
 ```bash
 pip install pillow numpy
 cd tools
-python3 gen_characters.py   # 4 persos riggés + animations (run/jump/roll/hit/idle)
-python3 gen_env.py          # bâtiments, kiosque, taxi wôrô-wôrô, pont, palmiers, route
-python3 gen_items.py        # 9 obstacles, 5 collectibles, 3 power-ups
+python3 gen_env.py          # route, tours du Plateau, palmiers, kiosque, garde-corps du pont
+python3 gen_items.py        # obstacles, collectibles, power-ups
+python3 gen_surfaces.py     # textures asphalte / pavés / latérite + sprites de particules
 python3 gen_textures.py     # icône appli + icônes UI
 python3 gen_audio.py        # SFX + musique
+python3 recolor_chars.py    # skins ivoiriens à partir des atlas KayKit (kaykit_textures/)
+python3 prune_gltf.py IN.glb OUT.glb --keep Idle,Running_A --drop Cape  # allège un .glb
 ```
 
-Le pipeline écrit directement des `.glb` glTF 2.0 (maillages *flat-shaded* low-poly,
-squelettes + skinning rigide + animations par images-clés) via `tools/gltf_builder.py`,
-**sans Blender**.
+Le pipeline écrit directement des `.glb` glTF 2.0 via `tools/gltf_builder.py`, **sans
+Blender** : une seule surface par modèle (couleurs par sommet) pour limiter les draw
+calls. `gen_characters.py` (ancien personnage procédural riggé) est conservé mais n'est
+plus utilisé.
+
+### Captures et tests (développement)
+
+```bash
+tools/shots/run.sh /tmp/shots                                   # captures (Xvfb + Mesa)
+godot --headless --path . --fixed-fps 60 res://tools/shots/soak.tscn   # 2 min de jeu, fuites
+```
 
 ---
 
@@ -166,15 +200,22 @@ godot --headless --path . --export-debug "Android" builds/android/AbidjanRunner.
 
 - **CharacterBody3D** joueur, détection par `Area3D` (hitbox qui monte au saut / descend
   à la roulade) → l'esquive dépend réellement de la pose.
-- **Chunks** de 12 m recyclés (8 actifs) : quand un chunk passe derrière le joueur, il est
-  repositionné devant et repeuplé. Les obstacles/objets sont **poolés** par type.
+- **Chunks** de 12 m recyclés (9 actifs) : quand un chunk passe derrière le joueur, il est
+  repositionné devant, re-décoré et repeuplé. Obstacles, objets **et décor** sont
+  **poolés** ; les pools sont pré-remplis à la demande maximale mesurée (test de 2 min :
+  nombre de nœuds stable, 0 nœud orphelin).
+- **~270 draw calls** par image en course (ombres limitées aux objets proches, modèles
+  générés à surface unique, matériaux partagés).
 - **Difficulté** progressive (nombre de voies bloquées / rangées) — au moins une voie
   toujours franchissable.
-- **Brouillard** de distance pour masquer l'apparition des chunks lointains.
+- **Brouillard de profondeur** (55 → 125 m) : masque l'apparition des chunks lointains
+  sans délaver le premier plan.
 - Sauvegarde locale JSON dans `user://abidjan_runner_save.json`.
 
 ---
 
 ## 📜 Licence / crédits
 
-Code, assets et audio générés pour ce projet. Style cartoon low-poly, thème Abidjan 🇨🇮.
+Assets tiers : KayKit (Kay Lousberg) et Kenney en **CC0**, police Lilita One en **OFL** —
+détail complet dans [CREDITS.md](CREDITS.md). Le reste (code, assets générés, musique)
+a été créé pour ce projet. Style cartoon low-poly, thème Abidjan 🇨🇮.
