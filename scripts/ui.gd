@@ -443,7 +443,7 @@ func _build_shop() -> void:
 	var back := _button("RETOUR", BLUE, 36, 88)
 	back.pressed.connect(func(): shop_closed.emit(); show_menu())
 	v.add_child(back)
-	var credits := _label("Personnages : Mannequiny (c) GDQuest, CC-BY 4.0 - animations KayKit, décors KayKit & Kenney (CC0)",
+	var credits := _label("Personnages : Quaternius - animations & décors : KayKit, Kenney (CC0)",
 		16, Color(1, 1, 1, 0.6), HORIZONTAL_ALIGNMENT_CENTER, 0)
 	credits.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(credits)

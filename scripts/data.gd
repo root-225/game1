@@ -16,7 +16,7 @@ const JUMP_VELOCITY := 8.2
 const GRAVITY := 22.0
 const LANE_CHANGE_TIME := 0.12
 const ROLL_TIME := 0.6
-const CHAR_SCALE := 0.92          # Mannequiny is 1.81 m -> ~1.66 m runner
+const CHAR_SCALE := 0.92          # Quaternius bodies 1.77-1.81 m -> ~1.65 m runners
 
 # lagoon / bridge biome: every BIOME_CYCLE chunks, LAGOON_LEN chunks of bridge
 const BIOME_CYCLE := 28
@@ -25,7 +25,7 @@ const LAGOON_LEN := 7
 
 const MODELS := "res://assets/models/"
 const KK_CITY := "res://assets/thirdparty/kaykit/city/"
-const RUNNERS := "res://assets/thirdparty/gdquest/"
+const RUNNERS := "res://assets/thirdparty/quaternius/"
 const KENNEY := "res://assets/thirdparty/kenney/"
 const CITY_SCALE := 4.8
 
@@ -63,13 +63,13 @@ const POWERUPS := {
 	"x2":     {"model": MODELS + "collectibles/pu_x2.glb", "y": 1.0, "dur": 8.0, "color": Color(1.0, 0.85, 0.2)},
 }
 
-# 4 humanoid runners: Mannequiny rig (GDQuest, CC-BY 4.0) dressed by tools/dress_runner.py,
-# animated with KayKit clips (CC0) retargeted by tools/retarget.py + an authored slide
+# 4 runners: Quaternius Universal Base Characters (CC0) dressed in African outfits by
+# tools/ubc_runners.py, animated with retargeted KayKit clips (CC0) + an authored slide
 const SKINS := {
-	"urban": {"model": RUNNERS + "runner_urban.glb", "name": "Urbain", "price": 0},
-	"trad":  {"model": RUNNERS + "runner_trad.glb", "name": "Habits Traditionnels", "price": 500},
-	"foot":  {"model": RUNNERS + "runner_foot.glb", "name": "Footballeur", "price": 800},
-	"biz":   {"model": RUNNERS + "runner_biz.glb", "name": "Businessman", "price": 1200},
+	"urban": {"model": RUNNERS + "runner_urban.glb", "name": "Urbain (chemise wax)", "price": 0},
+	"trad":  {"model": RUNNERS + "runner_trad.glb", "name": "Grand Boubou", "price": 500},
+	"foot":  {"model": RUNNERS + "runner_foot.glb", "name": "Footballeuse", "price": 800},
+	"biz":   {"model": RUNNERS + "runner_biz.glb", "name": "Robe Pagne", "price": 1200},
 }
 
 # logical animation -> clip in the runner .glb

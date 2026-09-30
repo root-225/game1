@@ -151,7 +151,7 @@ func set_skin(skin: String) -> void:
 	_model = Data.scene(Data.SKINS[skin]["model"]).instantiate()
 	_model.scale = Vector3.ONE * Data.CHAR_SCALE
 	_model.rotation.y = _facing
-	Mats.add_outline(_model, 0.012, Data.CHAR_SCALE)
+	Mats.add_outline(_model, 0.012, Data.CHAR_SCALE, Color(0.06, 0.05, 0.08), ["Face", "Eye"])
 	add_child(_model)
 	_anim = _model.find_child("AnimationPlayer", true, false)
 	if _anim:

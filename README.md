@@ -6,12 +6,15 @@ CFA, de l'alloco, du coco et de l'akpakpa. Vitesse progressive, score, meilleur 
 sauvegardé, missions quotidiennes et 4 skins à débloquer.
 
 Moteur : **Godot 4.4** (GDScript, renderer GL Compatibility, optimisé mobile 60 FPS).
-Les visuels combinent des **assets libres** — coureurs humanoïdes basés sur Mannequiny
-(GDQuest, CC-BY 4.0) animés avec des clips KayKit retargetés, rue KayKit, pièces/nuages/sons
-Kenney (CC0), police Lilita One — et des assets **générés par script** pour tout ce qui est
-propre à Abidjan (voir [CREDITS.md](CREDITS.md)).
+Les visuels combinent des **assets libres** — coureurs réalistes basés sur les Universal Base
+Characters de Quaternius (CC0), habillés en **tenues africaines** (chemise wax, grand boubou en
+bazin brodé + kufi, maillot des Éléphants, robe pagne + gele) et animés avec des clips KayKit
+retargetés ; rue KayKit, pièces/nuages/sons Kenney (CC0), police Lilita One — et des assets
+**générés par script** pour tout ce qui est propre à Abidjan (voir [CREDITS.md](CREDITS.md)).
 
 ![captures](docs/screenshots.jpg)
+
+![personnages](docs/runners.jpg)
 
 ---
 
@@ -28,7 +31,8 @@ propre à Abidjan (voir [CREDITS.md](CREDITS.md)).
 - **Génération procédurale infinie** par chunks recyclés + **pooling** des obstacles (zéro
   instanciation en cours de partie → pas de lag)
 - **Missions quotidiennes** (pièces / distance / parties) avec récompenses
-- **Boutique** : 4 skins (Urbain, Traditionnel, Footballeur, Businessman)
+- **Boutique** : 4 personnages (2 garçons, 2 filles) — Urbain en chemise wax, Grand Boubou,
+  Footballeuse, Robe Pagne
 - **Menu / Pause / Game Over**, UI tactile mobile + support clavier
 - **Deux ambiances** : les rues colorées de la ville (palmiers, lampadaires, bordures
   peintes rouge/blanc) et la **traversée du pont sur la lagune Ébrié**, avec les tours
@@ -116,7 +120,7 @@ python3 gen_items.py        # obstacles, collectibles, power-ups
 python3 gen_surfaces.py     # textures asphalte / pavés / latérite + sprites de particules
 python3 gen_textures.py     # icône appli + icônes UI
 python3 gen_audio.py        # SFX + musique
-./build_runners.sh          # coureurs : retarget des animations KayKit + glissade + habillage
+./build_runners.sh          # coureurs Quaternius : tenues africaines, coiffes, animations + glissade
 python3 recolor_atlas.py    # taxi orange / wôrô-wôrô vert (atlas KayKit City)
 python3 prune_gltf.py IN.glb OUT.glb --keep Idle,Running_A --drop Cape  # allège un .glb
 ```
@@ -211,8 +215,10 @@ godot --headless --path . --export-debug "Android" builds/android/AbidjanRunner.
 - **Rendu** : tonemapping Filmic + contraste/saturation, lumière ambiante en partie neutre
   (pas de dominante bleue), MSAA 4x, filtrage anisotrope, ombres 2 cascades (4096 px,
   2048 sur mobile), contours « inverted hull » et ombres de contact sous les obstacles.
-- **Coureurs** : squelette humain de 45 os ; animations KayKit retargetées (rotation par os
-  en espace monde relative à la T-pose commune) + glissade créée à la main.
+- **Coureurs** : squelette humain de 65 os (Quaternius) ; tenues peintes dans la texture à partir
+  d'une carte « position 3D par pixel » (coupes nettes), relief musculaire aplati sous les
+  vêtements, coiffes moulées sur le crâne ; animations KayKit retargetées + glissade créée à la
+  main + mains en poing souple.
 - **Difficulté** progressive (nombre de voies bloquées / rangées) — au moins une voie
   toujours franchissable.
 - **Brouillard de profondeur** (55 → 125 m) : masque l'apparition des chunks lointains

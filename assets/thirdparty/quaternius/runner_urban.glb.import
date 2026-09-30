@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://br7vqiodt1wa4"
-path="res://.godot/imported/runner_trad.glb-569cbb8b57b54f9f0b9fe688aa7c796b.scn"
+uid="uid://dluco65uixtii"
+path="res://.godot/imported/runner_urban.glb-c0d31bf748d3cfd6a7ee48f385a9c6a8.scn"
 
 [deps]
 
-source_file="res://assets/thirdparty/gdquest/runner_trad.glb"
-dest_files=["res://.godot/imported/runner_trad.glb-569cbb8b57b54f9f0b9fe688aa7c796b.scn"]
+source_file="res://assets/thirdparty/quaternius/runner_urban.glb"
+dest_files=["res://.godot/imported/runner_urban.glb-c0d31bf748d3cfd6a7ee48f385a9c6a8.scn"]
 
 [params]
 

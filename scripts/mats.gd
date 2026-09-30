@@ -45,7 +45,7 @@ static func apply_named(root: Node) -> void:
 
 # Toon outline via next_pass on every surface. `world_width` is divided by the node scale so
 # a 4.8x-scaled KayKit car gets the same outline as a 1x procedural cone.
-static func add_outline(root: Node, world_width: float, scale: float, col := Color(0.06, 0.05, 0.08)) -> void:
+static func add_outline(root: Node, world_width: float, scale: float, col := Color(0.06, 0.05, 0.08), skip: Array = []) -> void:
 	var w: float = world_width / maxf(scale, 0.001)
 	var okey := "outline:%.4f:%s" % [w, col.to_html()]
 	if not _m.has(okey):
@@ -56,6 +56,8 @@ static func add_outline(root: Node, world_width: float, scale: float, col := Col
 		_m[okey] = om
 	for mi in root.find_children("*", "MeshInstance3D", true, false):
 		var m3: MeshInstance3D = mi
+		if skip.any(func(k): return String(m3.name).contains(k)):
+			continue
 		for s in m3.mesh.get_surface_count():
 			var src: Material = m3.get_surface_override_material(s)
 			if src == null:

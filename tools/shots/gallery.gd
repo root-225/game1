@@ -43,6 +43,11 @@ func _ready() -> void:
 	if which == "runners":
 		models = []
 		for k in ["urban", "trad", "foot", "biz"]: models.append("res://assets/thirdparty/gdquest/work/runner_%s.glb" % k)
+	if which == "qrunners":
+		models = []
+		for k in ["urban", "trad", "foot", "biz"]: models.append("res://assets/thirdparty/quaternius/runner_%s.glb" % k)
+	if which == "ubc":
+		models = ["res://tools/source_models/ubc/Superhero_Male_FullBody.gltf", "res://tools/source_models/ubc/Superhero_Female_FullBody.gltf"]
 	if which == "man":
 		models = ["res://assets/thirdparty/gdquest/mannequiny.glb", "res://assets/thirdparty/gdquest/mannequiny.glb"]
 	if which == "cars":
@@ -71,18 +76,20 @@ func _ready() -> void:
 		var ap := inst.find_child("AnimationPlayer", true, false)
 		if ap and ap.has_animation("Running_A"): ap.play("Running_A"); ap.seek(0.2, true)
 		if ap and ap.has_animation("run") and x > 0.0: ap.play("run"); ap.seek(0.2, true)
-		if ap and which == "runners": ap.play("idle"); ap.seek(0.3, true)
+		if ap and (which == "runners" or which == "qrunners"): ap.play("idle"); ap.seek(0.3, true)
 		var a := _aabb(inst)
 		print("%-60s size=(%.2f, %.2f, %.2f) min=(%.2f,%.2f,%.2f)" % [p.get_file(), a.size.x, a.size.y, a.size.z, a.position.x, a.position.y, a.position.z])
 		inst.position.x = x - a.position.x
 		x += a.size.x + 0.4
 		maxh = max(maxh, a.size.y)
 	var cam := Camera3D.new(); add_child(cam)
-	if which == "runners" and OS.get_cmdline_user_args().size() > 2:
+	if (which == "runners" or which == "ubc" or which == "qrunners") and OS.get_cmdline_user_args().size() > 2:
 		cam.current = true
 		cam.fov = 30
-		cam.position = Vector3(x * 0.5, 1.45, 3.4)
-		cam.look_at(Vector3(x * 0.5, 1.4, 0))
+		var fy := 1.45 if which != "qrunners" else 1.62
+		cam.position = Vector3(x * 0.5, fy, 3.4 if which != "qrunners" else 9.0)
+		cam.look_at(Vector3(x * 0.5, fy - 0.05, 0))
+		if which == "qrunners": cam.fov = 14
 		for i in 20: await get_tree().process_frame
 		get_viewport().get_texture().get_image().save_png(out + "gallery_faces.png")
 		get_tree().quit()

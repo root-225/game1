@@ -45,3 +45,9 @@
 - [x] Coureur trop gros : humanoïde 1,66 m (Mannequiny CC-BY) au lieu du chibi, caméra plus haute/reculée
 - [x] Nouvelle glissade (slide) créée à la main, animations KayKit retargetées
 - [x] Qualité : MSAA 4x, anisotrope, ombres 2 cascades haute résolution
+
+## v4 — Personnages Quaternius en tenues africaines — ✅
+- [x] Universal Base Characters (CC0, fournis par l'utilisateur) : 2 garçons + 2 filles
+- [x] Tenues : chemise wax + jean, grand boubou bazin brodé + kufi, maillot Éléphants, robe pagne + gele
+- [x] Coiffes moulées sur le crâne, cheveux, chignon ; peau foncée ; mains en poing
+- [x] Animations KayKit retargetées + glissade
