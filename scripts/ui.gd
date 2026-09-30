@@ -55,6 +55,11 @@ func _ready() -> void:
 	_build_pause()
 	_build_over()
 	_build_shop()
+	# font applied at runtime (a project-setting font errors on the very first editor import)
+	var theme := Theme.new()
+	theme.default_font = load("res://assets/fonts/LilitaOne-Regular.ttf")
+	for scr in [menu, hud, pause_scr, over_scr, shop_scr]:
+		scr.theme = theme
 	Global.coins_changed.connect(_on_coins_changed)
 	Global.missions_changed.connect(_refresh_missions)
 	show_menu()

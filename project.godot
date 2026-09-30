@@ -27,7 +27,6 @@ window/stretch/aspect="expand"
 
 [gui]
 
-theme/custom_font="res://assets/fonts/LilitaOne-Regular.ttf"
 theme/default_font_antialiasing=1
 
 [input]
